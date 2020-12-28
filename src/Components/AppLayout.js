@@ -1,4 +1,5 @@
 import {
+  LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UploadOutlined,
@@ -19,6 +20,10 @@ class AppLayout extends Component {
     this.setState({
       collapsed: !this.state.collapsed,
     });
+  };
+  onLogoutClicked = () => {
+    localStorage.removeItem("user");
+    this.props.history.push("/login");
   };
   render() {
     return (
@@ -42,13 +47,20 @@ class AppLayout extends Component {
         </Sider>
         <Layout className="site-layout">
           <Header className="site-layout-background" style={{ padding: 0 }}>
-            {React.createElement(
-              this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-              {
-                className: "trigger",
-                onClick: this.toggle,
-              }
-            )}
+            <div className="d-flex">
+              <div>
+                {React.createElement(
+                  this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+                  {
+                    className: "trigger",
+                    onClick: this.toggle,
+                  }
+                )}
+              </div>
+              <div className="ml-auto">
+                <LogoutOutlined onClick={this.onLogoutClicked} />
+              </div>
+            </div>
           </Header>
           <Content
             className="site-layout-background"

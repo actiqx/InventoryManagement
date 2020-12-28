@@ -22,6 +22,7 @@ class AddProduct extends Component {
   }
 
   componentDidUpdate(prevState, prevProps) {}
+  componentWillUnmount() {}
   onFormInputHandler = (event) => {
     this.setState({ [event.target.id]: event.target.value });
   };
