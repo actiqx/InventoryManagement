@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Table } from "reactstrap";
+import { APIConstants } from "../common/Contants";
 
 const ViewProduct = (props) => {
   const [product, setproduct] = useState({});
@@ -8,9 +9,9 @@ const ViewProduct = (props) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/productList/" + id)
+      .get(APIConstants.urlroot + APIConstants.products + "/" + id)
       .then((res) => {
-        setproduct(res.data);
+        setproduct(res.data.product);
       })
       .catch((err) => {
         console.log(err);

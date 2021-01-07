@@ -1,5 +1,9 @@
 import axios from "axios";
 import React, { Component } from "react";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastr";
+import { Button } from "reactstrap";
+import { APIConstants } from "../common/Contants";
 
 class AddProduct extends Component {
   state = {
@@ -11,9 +15,12 @@ class AddProduct extends Component {
   componentDidMount() {
     if (this.props.match.params.id) {
       axios
-        .get("http://localhost:4000/productList/" + this.props.match.params.id)
+        .get(
+          `${APIConstants.urlroot}${APIConstants.products}/` +
+            this.props.match.params.id
+        )
         .then((res) => {
-          this.setState({ ...res.data });
+          this.setState({ ...res.data.product });
         })
         .catch((err) => {
           console.log(err);
@@ -29,31 +36,47 @@ class AddProduct extends Component {
 
   onSubmitHandler = () => {
     // this.props.addProduct(this.state);
-    const data = this.state;
+    const data = { ...this.state, _id: this.state.id };
     if (!this.props.match.params.id) {
-      axios.post("http://localhost:4000/productList", data).then((res) => {
-        if (res.status === 201) {
-          this.setState({ title: "", price: "", tags: "", quantity: "" });
-          this.props.history.push("/products");
-        }
-      });
+      axios
+        .post(APIConstants.urlroot + APIConstants.products, data)
+        .then((res) => {
+          if (res.status === 201) {
+            toast(res.data.message);
+            this.setState({ title: "", price: "", tags: "", quantity: "" });
+            this.props.history.push("/products");
+          }
+        });
     } else {
       axios
-        .patch(
-          "http://localhost:4000/productList/" + this.props.match.params.id,
+        .put(
+          APIConstants.urlroot +
+            APIConstants.products +
+            "/" +
+            this.props.match.params.id,
           data
         )
         .then((res) => {
           if (res.status === 200) {
+            toast(res.data.message);
             this.setState({ title: "", price: "", tags: "", quantity: "" });
             this.props.history.push("/products");
           }
         });
     }
   };
+  goBackToProductList = () => {
+    this.props.history.push("/product");
+  };
   render() {
     return (
       <div>
+        <ToastContainer />
+        <div className="d-flex justify-content-end">
+          <Button color="primary" onClick={this.goBackToProductList}>
+            Back
+          </Button>
+        </div>
         <div className="mb-3">
           <label htmlFor="title" className="form-label">
             Title
