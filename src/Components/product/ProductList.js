@@ -11,9 +11,15 @@ class ProductList extends Component {
   };
   container = createRef();
   getAllData = () => {
-    axios.get(APIConstants.urlroot + APIConstants.products).then((res) => {
-      this.setState({ productList: res.data });
-    });
+    axios
+      .get(APIConstants.urlroot + APIConstants.products, {
+        headers: {
+          Authorization: `Basic ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((res) => {
+        this.setState({ productList: res.data });
+      });
   };
   componentDidMount() {
     // axios.get("http://localhost:4000/productList").then((res) => {
