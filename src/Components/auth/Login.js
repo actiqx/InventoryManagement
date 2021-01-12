@@ -1,5 +1,7 @@
+import axios from "axios";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { APIConstants } from "../common/Contants";
 import "./login.css";
 class Login extends Component {
   state = {
@@ -12,10 +14,18 @@ class Login extends Component {
   };
   onSubmitHandler = (evt) => {
     evt.preventDefault();
-    if (this.state.username === "admin") {
-      localStorage.setItem("user", this.state.username);
-      this.props.history.push("/");
-    }
+
+    axios
+      .post(`${APIConstants.urlroot}${APIConstants.login}/`, {
+        email: this.state.username,
+        password: this.state.password,
+      })
+      .then((res) => {
+        localStorage.setItem("user", res.data.userID);
+        localStorage.setItem("token", res.data.token);
+      });
+
+    this.props.history.push("/");
   };
   render() {
     return (
@@ -53,7 +63,7 @@ class Login extends Component {
                     </label>
                     <br />
                     <input
-                      type="text"
+                      type="password"
                       name="password"
                       id="password"
                       class="form-control"
